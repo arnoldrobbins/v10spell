@@ -2,22 +2,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 #include "code.h"
-
-#ifndef __cplusplus
-
-void	exit(int);
-void	qsort(void*, unsigned, int, int(*)(void*, void*));
-
-#else
-
-#include <memory.h>
-extern "C" {
-void	exit(int);
-void	qsort(void*, unsigned, int, int(*)(void*, void*));
-}
-
-#endif
 
 /* read an annotated spelling list in the form
 	word <tab> affixcode [ , affixcode ] ...
@@ -42,10 +28,11 @@ int	ncodes;
 
 void	readinput(FILE*);
 long	typecode(char*);
-int	wcmp(void*, void*);
+int	wcmp(const void*, const void*);
 void	pdict(void);
 void	sput(int);
 
+int
 main(int argc, char *argv[])
 {
 	FILE* f;
@@ -53,11 +40,11 @@ main(int argc, char *argv[])
 	nwords = 0;
 	nspace = 0;
 	ncodes = 0;
-	if(argc <= 1)
+	if (argc <= 1)
 		readinput(stdin);
-	while(argc > 1) {
+	while (argc > 1) {
 		f = fopen(argv[1], "r");
-		if(f == 0) {
+		if (f == NULL) {
 			fprintf(stderr, "Cannot open %s\n", argv[1]);
 			exit(1);
 		}
@@ -73,7 +60,8 @@ main(int argc, char *argv[])
 	return 0;
 }
 
-wcmp(void *a, void *b)
+int
+wcmp(const void *a, const void *b)
 {
 
 	return strcmp(((Dict*)a)->word, ((Dict*)b)->word);
@@ -87,35 +75,35 @@ readinput(FILE* f)
 	char line[200];
 	long lineno = 0;
 
-	while(fgets(line, sizeof(line), f)) {
-		line[strlen(line)-1] = 0;
+	while (fgets(line, sizeof(line), f) != NULL) {
+		line[strlen(line)-1] = '\0';
 		lineno++;
 		code = line;
-		while(isspace(*code))
+		while (isspace(*code))
 			code++;
 		bword = code;
-		while(*code && !isspace(*code))
+		while (*code && ! isspace(*code))
 			code++;
 
 		i = code-bword;
-		memcpy(space+nspace, bword, i);
-		words[nwords].word = space+nspace;
+		memcpy(space + nspace, bword, i);
+		words[nwords].word = space + nspace;
 		nspace += i;
-		space[nspace] = 0;
+		space[nspace] = '\0';
 		nspace++;
 
-		if(*code) {
-			*code++ = 0;
-			while(isspace(*code))
+		if (*code) {
+			*code++ = '\0';
+			while (isspace(*code))
 				code++;
 		}
 		words[nwords].encode = typecode(code);
 		nwords++;
-		if(nwords >= sizeof(words)/sizeof(words[0])) {
+		if (nwords >= sizeof(words)/sizeof(words[0])) {
 			fprintf(stderr, "words array too small\n");
 			exit(1);
 		}
-		if(nspace >= sizeof(space)/sizeof(space[0])) {
+		if (nspace >= sizeof(space)/sizeof(space[0])) {
 			fprintf(stderr, "space array too small\n");
 			exit(1);
 		}
@@ -123,48 +111,47 @@ readinput(FILE* f)
 }
 
 
-typedef	struct	Class	Class;
-struct	Class
+typedef struct	Class
 {
 	char*	codename;
 	long	bits;
-};
+} Class;
 Class	codea[]  =
 {
 	{ "a", ADJ },
 	{ "adv", ADV },
-	0
+	NULL
 };
 Class	codec[] =
 {
 	{ "comp", COMP },
-	0
+	NULL
 };
 Class	coded[] =
 {
 	{ "d", DONT_TOUCH},
-	0
+	NULL
 };
 
 Class	codee[] =
 {
 	{ "ed",	ED },
 	{ "er", ACTOR },
-	0
+	NULL
 };
 
 Class	codei[] =
 {
 	{ "in", IN },
 	{ "ion", ION },
-	0
+	NULL
 };
 
 Class	codem[] =
 {
 	{ "man", MAN },
 	{ "ms", MONO },
-	0
+	NULL
 };
 
 Class	coden[] =
@@ -172,18 +159,18 @@ Class	coden[] =
 	{ "n", NOUN },
 	{ "na", N_AFFIX },
 	{ "nopref", NOPREF },
-	0
+	NULL
 };
 
 Class	codep[] =
 {
 	{ "pc", PROP_COLLECT },
-	0
+	NULL
 };
 Class	codes[] =
 {
 	{ "s", STOP },
-	0
+	NULL
 };
 
 Class	codev[] =
@@ -191,18 +178,18 @@ Class	codev[] =
 	{ "v", VERB },
 	{ "va", V_AFFIX },
 	{ "vi", V_IRREG },
-	0
+	NULL
 };
 
 Class	codey[] =
 {
 	{ "y", _Y },
-	0
+	NULL
 };
 
 Class	codez[] =
 {
-	0
+	NULL
 };
 Class*	codetab[] =
 {
@@ -245,29 +232,30 @@ typecode(char *str)
 	code = 0;
 
 loop:
-	for(s=str; *s != 0 && *s != ','; s++)
+	for (s = str; *s != '\0' && *s != ','; s++)
 		;
-	for(p = codetab[*str-'a']; sp = p->codename; p++) {
+	for (p = codetab[*str - 'a']; (sp = p->codename) != NULL; p++) {
 		st = str;
-		for(n=s-str;; st++,sp++) {
-			if(*st != *sp)
+		for (n = s - str; ; st++, sp++) {
+			if (*st != *sp)
 				goto cont;
 			n--;
-			if(n == 0)
+			if (n == 0)
 				break;
 		}
 		code |= p->bits;
-		if(*s == 0)
+		if (*s == '\0')
 			goto out;
-		str = s+1;
+		str = s + 1;
 		goto loop;
-	cont:;
+	cont:
+		;
 	}
 	fprintf(stderr, "Unknown affix code \"%s\"\n", str);
 	return 0;
 out:
-	for(i=0; i<ncodes; i++)
-		if(encodes[i] == code)
+	for (i = 0; i < ncodes; i++)
+		if (encodes[i] == code)
 			return i;
 	encodes[i] = code;
 	ncodes++;
@@ -278,17 +266,17 @@ void
 sput(int s)
 {
 
-	putchar(s>>8);
-	putchar(s);
+	putchar((s>>8) & 0xff);
+	putchar(s & 0xff);
 }
 
 void
 lput(long l)
 {
-	putchar(l>>24);
-	putchar(l>>16);
-	putchar(l>>8);
-	putchar(l);
+	putchar((l>>24) & 0xff);
+	putchar((l>>16) & 0xff);
+	putchar((l>>8) & 0xff);
+	putchar((l) & 0xff);
 }
 
 /*
@@ -308,6 +296,7 @@ lput(long l)
  * 0x7800 count of number of common bytes with previous word
  * 0x07ff index into codes array for affixes
  */
+
 void
 pdict(void)
 {
@@ -317,29 +306,29 @@ pdict(void)
 	char *lastword, *thisword, *word;
 
 	sput(ncodes);
-	for(i=0; i<ncodes; i++)
+	for (i = 0; i < ncodes; i++)
 		lput(encodes[i]);
 
 	count = ncodes*4 + 2;
 	lastword = "";
-	for(i=0; i<nwords; i++) {
+	for (i = 0; i < nwords; i++) {
 		word = words[i].word;
 		thisword = word;
-		for(j=0; *thisword == *lastword; j++) {
-			if(*thisword == 0) {
+		for (j = 0; *thisword == *lastword; j++) {
+			if (*thisword == '\0') {
 				fprintf(stderr, "identical words: %s\n", word);
 				break;
 			}
 			thisword++;
 			lastword++;
 		}
-		if(j > 15)
+		if (j > 15)
 			j = 15;
 		encode = words[i].encode;
-		c = (1<<15) | (j<<11) | encode;
+		c = (1 << 15) | (j << 11) | encode;
 		sput(c);
 		count += 2;
-		for(thisword=word+j; c = *thisword; thisword++) {
+		for (thisword = word + j; c = *thisword; thisword++) {
 			putchar(c);
 			count++;
 		}

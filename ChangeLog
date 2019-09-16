@@ -1,0 +1,5 @@
+2019-09-16         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* pcode.c (wcmp): Use const void * for the arguments.
+	(all): General code improvements: Use of NULL, '\0',
+	spacing around operators, etc.
