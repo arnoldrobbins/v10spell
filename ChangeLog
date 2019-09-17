@@ -3,9 +3,14 @@
 	* amspell.v10: Renamed from amspell.
 	* brspell.v10: Renamed from brspell.
 	* .gitignore: New file.
+	* sprog.c (readdict): Fix core dump.
+	(main): Add int return type.
+	(all): Start on code improvements.
 
 2019-09-16         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* pcode.c (wcmp): Use const void * for the arguments.
+	Add int return type.
+	(main): Add int return type.
 	(all): General code improvements: Use of NULL, '\0',
 	spacing around operators, etc.
