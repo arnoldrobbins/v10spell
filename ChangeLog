@@ -1,3 +1,8 @@
+2019-09-17         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* amspell.v10: Renamed from amspell.
+	* brspell.v10: Renbred from brspell.
+
 2019-09-16         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* pcode.c (wcmp): Use const void * for the arguments.
