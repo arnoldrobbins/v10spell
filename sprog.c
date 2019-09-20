@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <locale.h>
 
 #define isvowel(c)	voweltab[c]
 #define pair(a, b)	(((a) << 8) | (b))
@@ -446,6 +447,8 @@ main(int argc, char *argv[])
 	int low = 0;
 	Bits h;
 
+	setlocale(LC_ALL, "C");
+
 	for (i = 0; (c = "aeiouyAEIOUY"[i]) != '\0'; i++)
 		voweltab[c] = true;
 
@@ -455,12 +458,12 @@ main(int argc, char *argv[])
 		for (i = 1; c = argv[1][i]; i++) {
 			switch (c) {
 			default:
-				fprintf(stderr, "usage: spell [-bcvx] [-f file]\n");
-				exit(1);
+				fprintf(stderr, "usage: spell [-bcCvx] [-f file]\n");
+				exit(EXIT_FAILURE);
 
 			case 'b':
 				ise();
-				if (!fflag)
+				if (! fflag)
 					codefile = brfile;
 				continue;
 
@@ -482,7 +485,7 @@ main(int argc, char *argv[])
 			case 'f':
 				if (argc <= 2) {
 					fprintf(stderr, "spell: -f requires another argument\n");
-					exit(1);
+					exit(EXIT_FAILURE);
 				}
 				argv++;
 				argc--;
@@ -511,7 +514,7 @@ main(int argc, char *argv[])
 			}
 			j = getchar();
 			if (j == EOF)
-				exit(0);
+				exit(EXIT_SUCCESS);
 			// Input must be one word per line!
 			if (j != '\n')
 				*ep = j;
@@ -536,21 +539,21 @@ main(int argc, char *argv[])
 			goto check;
 
 		h = 0;
-		if (!low && !(h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)))
+		if (! low && ! (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)))
 			for (cp = original+1, dp = word+1; dp<ep; dp++, cp++)
 				*dp = tolower(*cp);
-		if (!h) {
+		if (! h) {
 			for (;;) {	/* at most twice */
 				if (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH))
 					break;
 				if (h = trysuff(ep, 0, ALL|STOP|DONT_TOUCH))
 					break;
-				if (!isupper(word[0]))
+				if (! isupper(word[0]))
 					break;
 				cp = original;
 				dp = word;
 				for (; *dp = *cp++; dp++) {
-					if (!low)
+					if (! low)
 						*dp = tolower(*dp);
 				}
 				word[0] = tolower(word[0]);
@@ -558,18 +561,21 @@ main(int argc, char *argv[])
 		}
 	check:
 		if (cflag) {
-			if (!h || Set(h, STOP))
+			if (! h || Set(h, STOP))
 				putchar('-');
-			else if (!vflag)
+			else if (! vflag)
 				putchar('+');
 			else 
 				putchar('0' + (suffcount > 0) +
 				   (prefcount > 4 ? 8 : 2 * prefcount));
-		} else if (!h || Set(h, STOP))
+		} else if (! h || Set(h, STOP))
 			printf("%s\n", original);
 		else if (affix[0] != '\0' && affix[0] != '.')
 			printf("%s\t%s\n", affix, original);
 	}
+
+	/* NOTREACHED */
+	return EXIT_SUCCESS;
 }
 
 /*	strip exactly one suffix and do
@@ -588,21 +594,21 @@ trysuff(char* ep, int lev, int flag)
 	lev += DLEV;
 	if (lev < DSIZ)
 		deriv[lev] = deriv[lev - 1] = emptyderiv;
-	if (!islower(initchar))
+	if (! islower(initchar))
 		return h;
 	for (t = suftab[initchar - 'a']; sp = t->suf; t++) {
 		cp = ep;
 		while (*sp)
 			if (*--cp != *sp++)
 				goto next;
-		for (sp = ep-t->n1; --sp >= word && !isvowel(*sp);)
+		for (sp = ep-t->n1; --sp >= word && ! isvowel(*sp);)
 			;
 		if (sp < word)
 			continue;
-		if (!(t->affixable & flag))
+		if (! (t->affixable & flag))
 			return 0;
 		h = (*t->p1)(ep-t->n1, t->d1, t->a1, lev+1, t->flag|STOP);
-		if (!h && t->p2 != NULL) {
+		if (! h && t->p2 != NULL) {
 			if (lev<DSIZ)
 				deriv[lev] = deriv[lev+1] = emptyderiv;
 			h = (*t->p2)(ep-t->n2, t->d2, t->a2, lev, t->flag|STOP);
@@ -657,7 +663,7 @@ strip(char* ep, char* d, char* a, int lev, int flag)
 		h = 0;
 	if (h)
 		return h;
-	if (isvowel(*ep) && !isvowel(ep[-1]) && ep[-1] == ep[-2]) {
+	if (isvowel(*ep) && ! isvowel(ep[-1]) && ep[-1] == ep[-2]) {
 		h = trypref(ep-1, a, lev, flag|MONO);
 		if (h)
 			return h;
@@ -694,7 +700,7 @@ Bits
 an(char* ep, char* d, char* a, int lev, int flag)
 {
 #pragma ref d
-	if (!isupper(*word))	/*must be proper name*/
+	if (! isupper(*word))	/*must be proper name*/
 		return 0;
 	return trypref(ep, a, lev, flag);
 }
@@ -740,7 +746,7 @@ ily(char* ep, char* d, char* a, int lev, int flag)
 
 	if (temp == ep[-1] && temp == ep[-2])	/* sillly */
 		return 0;
-	if (*--cp == 'y' && !isvowel(*--cp))	/* happyly */
+	if (*--cp == 'y' && ! isvowel(*--cp))	/* happyly */
 		while (cp > word)
 			if (isvowel(*--cp))	/* shyness */
 				return 0;
@@ -764,7 +770,7 @@ i_to_y(char* ep, char* d, char* a, int lev, int flag)
 
 	if (isupper(*word))
 		return 0;
-	if ((temp = ep[-1]) == 'i' && !isvowel(ep[-2])) {
+	if ((temp = ep[-1]) == 'i' && ! isvowel(ep[-2])) {
 		ep[-1] = 'y';
 		a = d;
 	}
@@ -869,7 +875,7 @@ CCe(char* ep, char* d, char* a, int lev, int flag)
 	case 'u':
 		if (h = y_to_e(ep, d, a, lev, flag))
 			return h;
-		if (!(ep[-2] == 'n' && ep[-1] == 'g'))
+		if (! (ep[-2] == 'n' && ep[-1] == 'g'))
 			return 0;
 	}
 	return VCe(ep, d, a, lev, flag);
@@ -887,11 +893,11 @@ VCe(char* ep, char* d, char* a, int lev, int flag)
 	c = ep[-1];
 	if (c == 'e')
 		return 0;
-	if (!isvowel(c) && isvowel(ep[-2])) {
+	if (! isvowel(c) && isvowel(ep[-2])) {
 		c = *ep;
 		*ep++ = 'e';
 		h = trypref(ep, d, lev, flag);
-		if (!h)
+		if (! h)
 			h = trysuff(ep, lev, flag);
 		if (h)
 			return h;
@@ -908,7 +914,7 @@ lookuppref(char** wp, char* ep)
 	char *bp, *cp;
 	int initchar = tolower(**wp);
 
-	if (!isalpha(initchar))
+	if (! isalpha(initchar))
 		return 0;
 
 	for (sp = preftab[initchar-'a']; sp->s; sp++) {
@@ -1036,7 +1042,7 @@ skipv(char *s)
 {
 	if (s >= word && isvowel(*s))
 		s--;
-	while (s >= word && !isvowel(*s))
+	while (s >= word && ! isvowel(*s))
 		s--;
 	return s;
 }
@@ -1102,7 +1108,7 @@ loop:
 	 */
 	cp = bp + (ep-bp)/2;
 
-	while (cp > bp && !(*cp & 0x80))
+	while (cp > bp && ! (*cp & 0x80))
 		cp--;
 	while (cp > bp && (cp[-1] & 0x80))
 		cp--;
@@ -1127,7 +1133,7 @@ loop:
 	}
 
 	if (f < 0) {
-		while (!(*cp1&0x80))
+		while (! (*cp1&0x80))
 			cp1++;
 		bp = cp1;
 		goto loop;
@@ -1205,7 +1211,7 @@ pcomma(char *s)
 		flag = false;
 		return;
 	}
-	if (!flag) {
+	if (! flag) {
 		fprintf(stderr, "%s", s);
 		flag = true;
 	} else
@@ -1257,7 +1263,7 @@ readdict(char *file)
 	f = open(file, 0);
 	if (f == -1) {
 		fprintf(stderr, "spell: cannot open %s\n", file);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (read(f, space, 2) != 2)
 		goto bad;
@@ -1303,7 +1309,7 @@ loop:
 	if (p <= 0)
 		i = (*is++ & 0xff)*128;
 	if (p <= 1) {
-		if (!(*is & 0x80))
+		if (! (*is & 0x80))
 			i = i/128*128 + (*is++ & 0xff);
 		if (i <= sp) {
 			fprintf(stderr, "spell: the dict isn't "
@@ -1332,17 +1338,17 @@ loop:
 
 bad:
 	fprintf(stderr, "spell: trouble reading %s\n", file);
-	exit(1);
+	exit(EXIT_FAILURE);
 noroom:
 	fprintf(stderr, "spell: not enough space for dictionary\n");
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 void
 runout(char *s)
 {
 	int c;
-	if (!cflag)
+	if (! cflag)
 		printf("%s", s);
 	else {
 		putchar('-');
@@ -1350,8 +1356,8 @@ runout(char *s)
 	}
 	do {
 		if ((c = getchar()) == EOF)
-			exit(0);
-		if (!cflag)
+			exit(EXIT_SUCCESS);
+		if (! cflag)
 			putchar(c);
 	} while (c != '\n');
 }

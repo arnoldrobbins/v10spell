@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <locale.h>
+
 #include "code.h"
 
 /* read an annotated spelling list in the form
@@ -35,7 +37,9 @@ void	sput(int);
 int
 main(int argc, char *argv[])
 {
-	FILE* f;
+	FILE *f;
+
+	setlocale(LC_ALL, "C");
 
 	nwords = 0;
 	nspace = 0;
@@ -46,7 +50,7 @@ main(int argc, char *argv[])
 		f = fopen(argv[1], "r");
 		if (f == NULL) {
 			fprintf(stderr, "Cannot open %s\n", argv[1]);
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		readinput(f);
 		fclose(f);
@@ -57,7 +61,7 @@ main(int argc, char *argv[])
 		nwords, nspace, ncodes);
 	qsort(words, nwords, sizeof(words[0]), wcmp);
 	pdict();
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 int
@@ -85,7 +89,7 @@ readinput(FILE* f)
 		while (*code && ! isspace(*code))
 			code++;
 
-		i = code-bword;
+		i = code - bword;
 		memcpy(space + nspace, bword, i);
 		words[nwords].word = space + nspace;
 		nspace += i;
@@ -101,11 +105,11 @@ readinput(FILE* f)
 		nwords++;
 		if (nwords >= sizeof(words)/sizeof(words[0])) {
 			fprintf(stderr, "words array too small\n");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		if (nspace >= sizeof(space)/sizeof(space[0])) {
 			fprintf(stderr, "space array too small\n");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 }
@@ -276,7 +280,7 @@ lput(long l)
 	putchar((l>>24) & 0xff);
 	putchar((l>>16) & 0xff);
 	putchar((l>>8) & 0xff);
-	putchar((l) & 0xff);
+	putchar(l & 0xff);
 }
 
 /*
@@ -309,7 +313,7 @@ pdict(void)
 	for (i = 0; i < ncodes; i++)
 		lput(encodes[i]);
 
-	count = ncodes*4 + 2;
+	count = ncodes * 4 + 2;
 	lastword = "";
 	for (i = 0; i < nwords; i++) {
 		word = words[i].word;

@@ -1,3 +1,10 @@
+2019-09-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* ChangeLog: Add early history.
+	* pcode.c (main): Add call to setlocale to "C", some more
+	code prettifying.
+	* sprog.c: Ditto.
+
 2019-09-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* amspell.v10: Renamed from amspell.
@@ -14,3 +21,23 @@
 	(main): Add int return type.
 	(all): General code improvements: Use of NULL, '\0',
 	spacing around operators, etc.
+
+1993-07-10         M. Douglas McIlroy    <doug@research.bell-labs.com>
+
+	Tenth Edition Files. Dates as found in the v10 tarball are:
+
+	-rw-rw-r-- 1 doug doug 343512 Jul 10  1993 list
+	-rw-rw-r-- 1 doug doug 163959 Jul 10  1993 amspell
+	-rw-rw-r-- 1 doug doug 164027 Jul 10  1993 brspell
+	-rw-rw-r-- 1 doug doug  12360 Jul 10  1993 local
+	-rw-rw-r-- 1 doug doug  22930 Jul 10  1993 sprog.c
+	-rw-rw-r-- 1 doug doug   5844 Jun 30  1993 british
+	-rw-rw-r-- 1 doug doug  18518 Jun 30  1993 stop
+	-rw-rw-r-- 1 doug doug   5691 Jun 30  1993 american
+	-rw-rw-r-- 1 doug doug    712 Jun 12  1993 mkfile
+	-rw-rw-r-- 1 doug doug   4741 Jun 11  1993 pcode.c
+	-rw-rw-r-- 1 doug doug   2964 Apr 28  1993 spell.1
+	-rwxrwxr-x 1 doug doug    912 Mar 10  1993 spell.sh
+	-rw-rw-r-- 1 doug doug    617 Feb 12  1993 makefile
+	-rw-rw-r-- 1 doug doug   1063 Nov  6  1992 code.h
+	-rw-rw-r-- 1 doug doug   1117 Dec 18  1990 README
