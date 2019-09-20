@@ -508,7 +508,7 @@ main(int argc, char *argv[])
 		affix[0] = '\0';
 		for (ep = original; ; ep++) {
 			if (ep >= original + sizeof(original) - 1) {
-				*ep = 0;
+				*ep = '\0';
 				runout(original);
 				goto loop;
 			}
@@ -519,7 +519,7 @@ main(int argc, char *argv[])
 			if (j != '\n')
 				*ep = j;
 			else {
-				*ep = 0;
+				*ep = '\0';
 				break;
 			}
 		}
@@ -540,7 +540,7 @@ main(int argc, char *argv[])
 
 		h = 0;
 		if (! low && ! (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)))
-			for (cp = original+1, dp = word+1; dp<ep; dp++, cp++)
+			for (cp = original+1, dp = word+1; dp < ep; dp++, cp++)
 				*dp = tolower(*cp);
 		if (! h) {
 			for (;;) {	/* at most twice */
@@ -596,22 +596,22 @@ trysuff(char* ep, int lev, int flag)
 		deriv[lev] = deriv[lev - 1] = emptyderiv;
 	if (! islower(initchar))
 		return h;
-	for (t = suftab[initchar - 'a']; sp = t->suf; t++) {
+	for (t = suftab[initchar - 'a']; (sp = t->suf) != NULL; t++) {
 		cp = ep;
 		while (*sp)
 			if (*--cp != *sp++)
 				goto next;
-		for (sp = ep-t->n1; --sp >= word && ! isvowel(*sp);)
+		for (sp = ep - t->n1; --sp >= word && ! isvowel(*sp);)
 			;
 		if (sp < word)
 			continue;
 		if (! (t->affixable & flag))
 			return 0;
-		h = (*t->p1)(ep-t->n1, t->d1, t->a1, lev+1, t->flag|STOP);
+		h = (*t->p1)(ep-t->n1, t->d1, t->a1, lev + 1, t->flag|STOP);
 		if (! h && t->p2 != NULL) {
-			if (lev<DSIZ)
+			if (lev < DSIZ)
 				deriv[lev] = deriv[lev+1] = emptyderiv;
-			h = (*t->p2)(ep-t->n2, t->d2, t->a2, lev, t->flag|STOP);
+			h = (*t->p2)(ep - t->n2, t->d2, t->a2, lev, t->flag|STOP);
 		}
 		break;
 	next:;
@@ -647,8 +647,7 @@ cstrip(char* ep, char* d, char* a, int lev, int flag)
 		case pair('o', 'a'):
 			return 0;
 		}
-	} else
-	if (temp == ep[-1] && temp == ep[-2])
+	} else if (temp == ep[-1] && temp == ep[-2])
 		return 0;
 	return strip(ep, d, a, lev, flag);
 }
@@ -664,7 +663,7 @@ strip(char* ep, char* d, char* a, int lev, int flag)
 	if (h)
 		return h;
 	if (isvowel(*ep) && ! isvowel(ep[-1]) && ep[-1] == ep[-2]) {
-		h = trypref(ep-1, a, lev, flag|MONO);
+		h = trypref(ep - 1, a, lev, flag|MONO);
 		if (h)
 			return h;
 	}
@@ -700,7 +699,7 @@ Bits
 an(char* ep, char* d, char* a, int lev, int flag)
 {
 #pragma ref d
-	if (! isupper(*word))	/*must be proper name*/
+	if (! isupper(*word))	/* must be proper name */
 		return 0;
 	return trypref(ep, a, lev, flag);
 }
@@ -917,9 +916,9 @@ lookuppref(char** wp, char* ep)
 	if (! isalpha(initchar))
 		return 0;
 
-	for (sp = preftab[initchar-'a']; sp->s; sp++) {
+	for (sp = preftab[initchar - 'a']; sp->s != NULL; sp++) {
 		bp = *wp;
-		for (cp = sp->s; *cp;)
+		for (cp = sp->s; *cp != '\0';)
 			if (*bp++ != *cp++)
 				goto next;
 		for (cp = bp; cp < ep; cp++)
@@ -927,7 +926,8 @@ lookuppref(char** wp, char* ep)
 				*wp = bp;
 				return sp;
 			}
-	next:;
+	next:
+		;
 	}
 	return 0;
 }
@@ -944,39 +944,39 @@ trypref(char* ep, char* a, int lev, int flag)
 	Bits h;
 	char space[20];
 
-	if (lev<DSIZ) {
+	if (lev < DSIZ) {
 		deriv[lev].mesg = a;
-		deriv[lev].type = *a =='.'? NONE: SUFF;
+		deriv[lev].type = (*a =='.' ? NONE : SUFF);
 	}
 	if (h = tryword(word, ep, lev, flag)) {
-		if (Set(h, flag&~MONO) && (flag&MONO) <= Set(h, MONO))
+		if (Set(h, flag & ~MONO) && (flag & MONO) <= Set(h, MONO))
 			return h;
 		h = 0;
 	}
 	bp = word;
 	pp = space;
-	if (lev<DSIZ) {
-		deriv[lev+1].mesg = pp;
-		deriv[lev+1].type = 0;
+	if (lev < DSIZ) {
+		deriv[lev + 1].mesg = pp;
+		deriv[lev + 1].type = 0;
 	}
 	while (tp = lookuppref(&bp, ep)) {
 		*pp++ = '+';
 		cp = tp->s;
-		while (pp<space+sizeof(space) && (*pp = *cp++))
+		while (pp < space + sizeof(space) && (*pp = *cp++) != '\0')
 			pp++;
-		deriv[lev+1].type += PREF;
-		h = tryword(bp, ep, lev+1, flag);
+		deriv[lev + 1].type += PREF;
+		h = tryword(bp, ep, lev + 1, flag);
 		if (Set(h, NOPREF) ||
-		   ((tp->flag&IN) && inun(bp-2, h) ==0)) {
+		   ((tp->flag & IN) && inun(bp-2, h) == 0)) {
 			h = 0;
 			break;
 		}
-		if (Set(h, flag&~MONO) && (flag&MONO) <= Set(h, MONO))
+		if (Set(h, flag & ~MONO) && (flag & MONO) <= Set(h, MONO))
 			break;
 		h = 0;
 	}
-	if (lev<DSIZ)
-		deriv[lev+1] = deriv[lev+2] = emptyderiv;
+	if (lev < DSIZ)
+		deriv[lev + 1] = deriv[lev + 2] = emptyderiv;
 	return h;
 }
 
@@ -987,10 +987,10 @@ tryword(char* bp, char* ep, int lev, int flag)
 	Bits h = 0;
 	char duple[3];
 
-	if (ep-bp <= 1)
+	if (ep - bp <= 1)
 		return h;
-	if (flag&MONO) {
-		if (lev<DSIZ) {
+	if (flag & MONO) {
+		if (lev < DSIZ) {
 			deriv[++lev].mesg = duple;
 			deriv[lev].type = SUFF;
 		}
@@ -999,7 +999,7 @@ tryword(char* bp, char* ep, int lev, int flag)
 		duple[2] = 0;
 	}
 	h = dict(bp, ep);
-	if (vflag ==0 || h ==0)
+	if (vflag == 0 || h == 0)
 		return h;
 	/*
 	 * when derivations are wanted, collect them
@@ -1008,7 +1008,7 @@ tryword(char* bp, char* ep, int lev, int flag)
 	j = lev;
 	prefcount = suffcount = 0;
 	do {
-		if (j<DSIZ && deriv[j].type) {
+		if (j < DSIZ && deriv[j].type) {
 			strcat(affix, deriv[j].mesg);
 			if (deriv[j].type == SUFF)
 				suffcount++;
@@ -1037,7 +1037,7 @@ inun(char* bp, Bits h)
 	return bp[1] == 'n';
 }
 
-char*
+char *
 skipv(char *s)
 {
 	if (s >= word && isvowel(*s))
@@ -1057,14 +1057,14 @@ ise(void)
 	int i;
 
 	for (i = 0; i < 26; i++)
-		for (p = suftab[i]; p->suf; p++) {
+		for (p = suftab[i]; p->suf != NULL; p++) {
 			p->suf = ztos(p->suf);
 			p->d1 = ztos(p->d1);
 			p->a1 = ztos(p->a1);
 		}
 }
 
-char*
+char *
 ztos(char *as)
 {
 	char *s, *ds;
@@ -1106,7 +1106,7 @@ loop:
 	/*
 	 * find the beginning of some word in the middle
 	 */
-	cp = bp + (ep-bp)/2;
+	cp = bp + (ep - bp) / 2;
 
 	while (cp > bp && ! (*cp & 0x80))
 		cp--;
@@ -1117,13 +1117,13 @@ loop:
 	cp1 = cp + 2;	/* skip affix code */
 	for (;;) {
 		if (wp >= we) {
-			if (*cp1&0x80)
+			if (*cp1 & 0x80)
 				goto found;
 			else
 				f = 1;
 			break;
 		}
-		if (*cp1&0x80) {
+		if (*cp1 & 0x80) {
 			f = -1;
 			break;
 		}
@@ -1133,7 +1133,7 @@ loop:
 	}
 
 	if (f < 0) {
-		while (! (*cp1&0x80))
+		while (! (*cp1 & 0x80))
 			cp1++;
 		bp = cp1;
 		goto loop;
@@ -1162,11 +1162,9 @@ typeprint(Bits h)
 	if (h & VERB) {
 		if ((h & VERB) == VERB)
 			pcomma("v");
-		else
-		if ((h & VERB) == V_IRREG)
+		else if ((h & VERB) == V_IRREG)
 			pcomma("vi");
-		else
-		if (h & ED)
+		else if (h & ED)
 			pcomma("ed");
 	}
 	if (h & ADJ)
@@ -1267,19 +1265,19 @@ readdict(char *file)
 	}
 	if (read(f, space, 2) != 2)
 		goto bad;
-	nencode = ((space[0]&0xff)<<8) | (space[1]&0xff);
-	if (nencode > sizeof(encode)/sizeof(*encode))
+	nencode = ((space[0] & 0xff) << 8) | (space[1] & 0xff);
+	if (nencode > sizeof(encode) / sizeof(*encode))
 		goto noroom;
-	if (read(f, space, nencode*sizeof(*encode))
-			!= nencode*sizeof(*encode))
+	if (read(f, space, nencode * sizeof(*encode))
+			!= nencode * sizeof(*encode))
 		goto bad;
 	s = space;
 	for (i = 0; i<nencode; i++) {
-		l = (long)(s[0] & 0xff) << 24;
+		l = (long) (s[0] & 0xff) << 24;
 		l |= (s[1] & 0xff) << 16;
 		l |= (s[2] & 0xff) << 8;
 		l |= s[3] & 0xff;
-		encode[i] = (Bits)l;
+		encode[i] = (Bits) l;
 		s += 4;
 	}
 	l = read(f, space, sizeof(space));
@@ -1298,26 +1296,26 @@ loop:
 		goto noroom;
 	if (c < 0) {
 		close(f);
-		while (sp < 128*128)
+		while (sp < 128 * 128)
 			spacep[++sp] = s;
 		*s++ = 0x80;		/* fence */
 		return;
 	}
-	p = (c>>3) & 0xf;
+	p = (c >> 3) & 0xf;
 	*s++ = c;
 	*s++ = *is++ & 0xff;
 	if (p <= 0)
-		i = (*is++ & 0xff)*128;
+		i = (*is++ & 0xff) * 128;
 	if (p <= 1) {
 		if (! (*is & 0x80))
-			i = i/128*128 + (*is++ & 0xff);
+			i = i / 128 * 128 + (*is++ & 0xff);
 		if (i <= sp) {
 			fprintf(stderr, "spell: the dict isn't "
 			    "sorted or memmove didn't work\n");
 			goto bad;
 		}
 		while (sp < i)
-			spacep[++sp] = s-2;
+			spacep[++sp] = s - 2;
 	}
 	ls = lasts;
 	lasts = s;
@@ -1333,7 +1331,7 @@ loop:
 			break;
 		*s++ = c;
 	}
-	*s = 0;
+	*s = '\0';
 	goto loop;
 
 bad:

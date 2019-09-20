@@ -3,7 +3,7 @@
 	* ChangeLog: Add early history.
 	* pcode.c (main): Add call to setlocale to "C", some more
 	code prettifying.
-	* sprog.c: Ditto.
+	* sprog.c: Ditto.  And more code "prettifying".
 
 2019-09-17         Arnold D. Robbins     <arnold@skeeve.com>
 
