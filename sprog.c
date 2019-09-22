@@ -435,8 +435,12 @@ int	nencode;
 bool	voweltab[128];
 char*	spacep[128*128+1];	/* pointer to words starting with 'xx' */
 
-char*	codefile = "/usr/lib/spell/amspell";
-char*	brfile = "/usr/lib/spell/brspell";
+#ifndef LIBDIR
+#define LIBDIR	"/usr/local/lib/v10spell/"
+#endif
+
+char*	codefile = LIBDIR "amspell";
+char*	brfile = LIBDIR "brspell";
 
 int
 main(int argc, char *argv[])
@@ -1056,12 +1060,13 @@ ise(void)
 	Suftab *p;
 	int i;
 
-	for (i = 0; i < 26; i++)
+	for (i = 0; i < 26; i++) {
 		for (p = suftab[i]; p->suf != NULL; p++) {
 			p->suf = ztos(p->suf);
 			p->d1 = ztos(p->d1);
 			p->a1 = ztos(p->a1);
 		}
+	}
 }
 
 char *
@@ -1073,9 +1078,15 @@ ztos(char *as)
 		return as;
 
 	ds = strdup(as);
+	if (ds == NULL) {
+		fprintf(stderr, "sprog: no memory!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	for (s = ds; *s != '\0'; s++)
 		if (*s == 'z')
 			*s = 's';
+
 	return ds;
 }
 
