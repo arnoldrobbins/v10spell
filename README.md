@@ -19,6 +19,12 @@ The original C version of the UNIX <tt>spell</tt> program was written by Doug Mc
 
 Doug McIlroy published a paper on the original UNIX <tt>spell</tt> in IEEE Transactions on Communications. It's available from his [home page](https://www.cs.dartmouth.edu/~doug/spell.pdf).
 
+In private mail to me, Doug says:
+
+	By the 10th edition, the word list no longer needed to be compressed, and "part-of-speech" affixability codes had been added, thanks to work of Ruby Jane Elliott. The codes cut down on the acceptance of silly derivatives.
+
+However, this version still uses the compressed dictionaries. He likely has a nenewer version of the code.
+
 ## Changes Made
 
 The original code looks to have been written such that it would compile for both C and C++. I have removed the C++ bits and gone for straight C. Along the way, I fixed a core dump issue in the main program that apparently didn't happen on the Research VAX systems.
