@@ -559,7 +559,7 @@ main(int argc, char *argv[])
 				putchar('+');
 			else 
 				putchar('0' + (suffcount > 0) +
-				   (prefcount > 4 ? 8 : 2 * prefcount));
+				    (prefcount > 4 ? 8 : 2 * prefcount));
 		} else if (! h || Set(h, STOP))
 			printf("%s\n", original);
 		else if (affix[0] != '\0' && affix[0] != '.')
