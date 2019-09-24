@@ -23,7 +23,7 @@ In private mail to me, Doug says:
 
 > By the 10th edition, the word list no longer needed to be compressed, and "part-of-speech" affixability codes had been added, thanks to work of Ruby Jane Elliott. The codes cut down on the acceptance of silly derivatives.
 
-However, this version still uses the compressed dictionaries. He likely has a nenewer version of the code.
+However, this version still uses the compressed dictionaries. He likely has a newer version of the code.
 
 ## Changes Made
 
