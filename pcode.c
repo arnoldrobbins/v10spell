@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -124,38 +123,38 @@ Class	codea[]  =
 {
 	{ "a", ADJ },
 	{ "adv", ADV },
-	NULL
+	{ NULL, 0 },
 };
 Class	codec[] =
 {
 	{ "comp", COMP },
-	NULL
+	{ NULL, 0 },
 };
 Class	coded[] =
 {
 	{ "d", DONT_TOUCH},
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codee[] =
 {
 	{ "ed",	ED },
 	{ "er", ACTOR },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codei[] =
 {
 	{ "in", IN },
 	{ "ion", ION },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codem[] =
 {
 	{ "man", MAN },
 	{ "ms", MONO },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	coden[] =
@@ -163,18 +162,18 @@ Class	coden[] =
 	{ "n", NOUN },
 	{ "na", N_AFFIX },
 	{ "nopref", NOPREF },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codep[] =
 {
 	{ "pc", PROP_COLLECT },
-	NULL
+	{ NULL, 0 },
 };
 Class	codes[] =
 {
 	{ "s", STOP },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codev[] =
@@ -182,18 +181,18 @@ Class	codev[] =
 	{ "v", VERB },
 	{ "va", V_AFFIX },
 	{ "vi", V_IRREG },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codey[] =
 {
 	{ "y", _Y },
-	NULL
+	{ NULL, 0 },
 };
 
 Class	codez[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Class*	codetab[] =
 {
@@ -332,7 +331,7 @@ pdict(void)
 		c = (1 << 15) | (j << 11) | encode;
 		sput(c);
 		count += 2;
-		for (thisword = word + j; c = *thisword; thisword++) {
+		for (thisword = word + j; (c = *thisword) != '\0'; thisword++) {
 			putchar(c);
 			count++;
 		}

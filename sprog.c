@@ -1,4 +1,3 @@
-
 #include "code.h"
 
 #include <stdio.h>
@@ -10,7 +9,6 @@
 #include <fcntl.h>
 #include <locale.h>
 
-#define isvowel(c)	voweltab[c]
 #define pair(a, b)	(((a) << 8) | (b))
 #define DLEV		2
 #define DSIZ		40
@@ -72,7 +70,7 @@ typedef struct	Suftab
 
 Suftab	staba[] = {
 	{ "aibohp", subst, 1, "-e+ia", "", NOUN, NOUN },
-	NULL
+	{ NULL, 0 },
 };
 
 Suftab	stabc[] =
@@ -86,13 +84,13 @@ Suftab	stabc[] =
 	{ "cigol", i_to_y, 1, "-y+ic", "", NOUN, ADJ  },
 	{ "cimono", i_to_y, 1, "-y+ic", "", NOUN, ADJ  },
 	{ "cibohp", subst, 1, "-e+ic", "", NOUN, ADJ  },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabd[] =
 {
 	{ "de", strip, 1, "", "+d", ED, ADJ |COMP, i_to_y, 2, "-y+ied", "+ed" },
 	{ "dooh", ily, 4, "-y+ihood", "+hood", NOUN | ADV, NOUN },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabe[] =
 {
@@ -105,7 +103,7 @@ Suftab	stabe[] =
 	{ "evi", subst, 0, "-ion+ive", "", N_AFFIX | V_AFFIX, NOUN | N_AFFIX| ADJ },
 	{ "ezi", CCe, 3, "-e+ize", "+ize", N_AFFIX|ADJ , V_AFFIX | VERB |ION | COMP },
 	{ "ekil", strip, 4, "", "+like", N_AFFIX , ADJ },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabg[] =
 {
@@ -113,7 +111,7 @@ Suftab	stabg[] =
 	{ "gnikam", strip, 6, "", "+making", NOUN, NOUN },
 	{ "gnipeek", strip, 7, "", "+keeping", NOUN, NOUN },
 	{ "gni", CCe, 3, "-e+ing", "+ing", V_IRREG , ADJ|ED|NOUN },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabl[] =
 {
@@ -122,14 +120,14 @@ Suftab	stabl[] =
 	{ "latnem", strip, 2, "", "+al", N_AFFIX, ADJ },
 	{ "lanoi", strip, 2, "", "+al", N_AFFIX, ADJ|NOUN },
 	{ "luf", ily, 3, "-y+iful", "+ful", N_AFFIX, ADJ | NOUN },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabm[] =
 {
 		/* congregational + ism */
 	{ "msi", CCe, 3, "-e+ism", "ism", N_AFFIX|ADJ, NOUN },
 	{ "margo", subst, -1, "-ph+m", "", NOUN, NOUN },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabn[] =
 {
@@ -142,12 +140,12 @@ Suftab	stabn[] =
 	{ "na", an, 1, "", "+n", NOUN|PROP_COLLECT, NOUN | N_AFFIX },
 	{ "nemow", strip, 5, "", "+women", MAN, PROP_COLLECT },
 	{ "nem", strip, 3, "", "+man", MAN, PROP_COLLECT },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabp[] =
 {
 	{ "pihs", strip, 4, "", "+ship", NOUN|PROP_COLLECT, NOUN| N_AFFIX },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabr[] =
 {
@@ -159,7 +157,7 @@ Suftab	stabr[] =
 	{ "rota", tion, 2, "-e+or", "", ION, NOUN| N_AFFIX|_Y },
 	{ "rotc", tion, 2, "", "+or", ION, NOUN| N_AFFIX },
 	{ "rotp", tion, 2, "", "+or", ION, NOUN| N_AFFIX },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabs[] =
 {
@@ -168,7 +166,7 @@ Suftab	stabs[] =
 	{ "se", s, 1, "", "+s", NOUN | V_IRREG, DONT_TOUCH , 	es, 2, "-y+ies", "+es" },
 	{ "s'", s, 2, "", "+'s", PROP_COLLECT | NOUN, DONT_TOUCH  },
 	{ "s", s, 1, "", "+s", NOUN | V_IRREG, DONT_TOUCH   },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabt[] =
 {
@@ -176,7 +174,7 @@ Suftab	stabt[] =
 	{ "tse", strip, 2, "", "+st", EST, DONT_TOUCH, 	i_to_y, 3, "-y+iest", "+est"  },
 	{ "tsigol", i_to_y, 2, "-y+ist", "", N_AFFIX, NOUN | N_AFFIX },
 	{ "tsi", CCe, 3, "-e+ist", "+ist", N_AFFIX|ADJ, NOUN | N_AFFIX|COMP },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	staby[] =
 {
@@ -190,11 +188,11 @@ Suftab	staby[] =
 	{ "yl", ily, 2, "-y+ily", "+ly", ADJ, ADV|COMP },
 	{ "yrtem", subst, 0, "-er+ry", "", NOUN, NOUN | N_AFFIX },
 	{ "y", CCe, 1, "-e+y", "+y", _Y, ADJ|COMP },
-	NULL
+	{ NULL, 0 },
 };
 Suftab	stabz[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Suftab*	suftab[] =
 {
@@ -230,43 +228,43 @@ Ptab	ptaba[] =
 {
 	{ "anti", 0 },
 	{ "auto", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabb[] =
 {
 	{ "bio", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabc[] =
 {
 	{ "counter", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabd[] =
 {
 	{ "dis", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabe[] =
 {
 	{ "electro", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabf[] =
 {
 	{ "femto", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabg[] =
 {
 	{ "geo", 0 },
 	{ "giga", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabh[] =
 {
 	{ "hyper", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabi[] =
 {
@@ -277,20 +275,20 @@ Ptab	ptabi[] =
 	{ "in", IN },
 	{ "ir", IN },
 	{ "iso", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabj[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabk[] =
 {
 	{ "kilo", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabl[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabm[] =
 {
@@ -304,20 +302,20 @@ Ptab	ptabm[] =
 	{ "mis", 0 },
 	{ "mono", 0 },
 	{ "multi", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabn[] =
 {
 	{ "nano", 0 },
 	{ "neuro", 0 },
 	{ "non", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabo[] =
 {
 	{ "out", 0 },
 	{ "over", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabp[] =
 {
@@ -328,18 +326,18 @@ Ptab	ptabp[] =
 	{ "pre", 0 },
 	{ "pseudo", 0 },
 	{ "psycho", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabq[] =
 {
 	{ "quasi", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabr[] =
 {
 	{ "radio", 0 },
 	{ "re", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabs[] =
 {
@@ -347,40 +345,40 @@ Ptab	ptabs[] =
 	{ "stereo", 0 },
 	{ "sub", 0 },
 	{ "super", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabt[] =
 {
 	{ "tele", 0 },
 	{ "thermo", 0 },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabu[] =
 {
 	{ "ultra", 0 },
 	{ "under", 0 }, 	/*must precede un*/
 	{ "un", IN },
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabv[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabw[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabx[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptaby[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 Ptab	ptabz[] =
 {
-	NULL
+	{ NULL, 0 },
 };
 
 Ptab*	preftab[] =
@@ -447,66 +445,56 @@ main(int argc, char *argv[])
 {
 	char *ep, *cp;
 	char *dp;
-	int j, i, c;
+	int c;
 	int low = 0;
 	Bits h;
 
 	setlocale(LC_ALL, "C");
 
-	for (i = 0; (c = "aeiouyAEIOUY"[i]) != '\0'; i++)
-		voweltab[c] = true;
+	const char *vs = "aeiouyAEIOUY";
+	for (const char *v = vs; *v != '\0'; v++)
+		voweltab[(int)*v] = true;
 
-	while (argc > 1) {
-		if (argv[1][0] != '-')
+	while ((c = getopt(argc, argv, "bCcvxf:")) != -1) {
+		switch (c) {
+		default:
+			fprintf(stderr, "usage: spell [-bcCvx] [-f file]\n");
+			exit(EXIT_FAILURE);
+
+		case 'b':
+			ise();
+			if (! fflag)
+				codefile = brfile;
 			break;
-		for (i = 1; c = argv[1][i]; i++) {
-			switch (c) {
-			default:
-				fprintf(stderr, "usage: spell [-bcCvx] [-f file]\n");
-				exit(EXIT_FAILURE);
 
-			case 'b':
-				ise();
-				if (! fflag)
-					codefile = brfile;
-				continue;
+		case 'C':
+			vflag++;
+		case 'c':
+			setbuf(stdout, 0);
+			cflag++;
+			break;
 
-			case 'C':
-				vflag++;
-			case 'c':
-				setbuf(stdout, 0);
-				cflag++;
-				continue;
+		case 'v':
+			vflag++;
+			break;
 
-			case 'v':
-				vflag++;
-				continue;
+		case 'x':
+			xflag++;
+			break;
 
-			case 'x':
-				xflag++;
-				continue;
-
-			case 'f':
-				if (argc <= 2) {
-					fprintf(stderr, "spell: -f requires another argument\n");
-					exit(EXIT_FAILURE);
-				}
-				argv++;
-				argc--;
-				fflag++;
-				codefile = argv[1];
-				goto brk;
-			}
+		case 'f':
+			fflag++;
+			codefile = optarg;
+			break;
 		}
-	brk:
-		argv++;
-		argc--;
 	}
-	readdict(codefile);
+	argc -= optind;
+	argv += optind;
 	if (argc > 1) {
 		fprintf(stderr, "usage: spell [-bcvx] [-f file]\n");
 		exit(EXIT_FAILURE);
 	}
+	readdict(codefile);
 	for (;;) {
 	loop:
 		affix[0] = '\0';
@@ -516,30 +504,30 @@ main(int argc, char *argv[])
 				runout(original);
 				goto loop;
 			}
-			j = getchar();
-			if (j == EOF)
+			c = getchar();
+			if (c == EOF)
 				exit(EXIT_SUCCESS);
 			// Input must be one word per line!
-			if (j != '\n')
-				*ep = j;
+			if (c != '\n')
+				*ep = c;
 			else {
 				*ep = '\0';
 				break;
 			}
 		}
 		low = 0;
-		for (ep = word, dp = original; (j = *dp) != '\0'; ep++, dp++) {
-			if (islower(j))
+		for (ep = word, dp = original; (c = *dp) != '\0'; ep++, dp++) {
+			if (islower(c))
 				low++;
 			if (ep >= word + sizeof(word) - 1)
 				break;
-			*ep = j;
+			*ep = c;
 		}
 		*ep = '\0';
 
 		h = ~STOP;
-		if (word[1] == '\0' && isalnum(word[0]) ||
-		   isdigit(word[0]) && ordinal())
+		if ((word[1] == '\0' && isalnum(word[0])) ||
+		    (isdigit(word[0]) && ordinal()))
 			goto check;
 
 		h = 0;
@@ -548,15 +536,15 @@ main(int argc, char *argv[])
 				*dp = tolower(*cp);
 		if (! h) {
 			for (;;) {	/* at most twice */
-				if (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH))
+				if ((h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)) != 0)
 					break;
-				if (h = trysuff(ep, 0, ALL|STOP|DONT_TOUCH))
+				if ((h = trysuff(ep, 0, ALL|STOP|DONT_TOUCH)) != 0)
 					break;
 				if (! isupper(word[0]))
 					break;
 				cp = original;
 				dp = word;
-				for (; *dp = *cp++; dp++) {
+				for (; (*dp = *cp++) != '\0'; dp++) {
 					if (! low)
 						*dp = tolower(*dp);
 				}
@@ -580,6 +568,12 @@ main(int argc, char *argv[])
 
 	/* NOTREACHED */
 	return EXIT_SUCCESS;
+}
+
+bool
+isvowel(int c)
+{
+	return voweltab[c];
 }
 
 /*	strip exactly one suffix and do
@@ -626,11 +620,11 @@ trysuff(char* ep, int lev, int flag)
 Bits
 nop(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref ep
-#pragma ref d
-#pragma ref a
-#pragma ref lev
-#pragma ref flag
+	(void)ep;
+	(void)d;
+	(void)a;
+	(void)lev;
+	(void)flag;
 	return 0;
 }
 
@@ -659,7 +653,7 @@ cstrip(char* ep, char* d, char* a, int lev, int flag)
 Bits
 strip(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref d
+	(void)d;
 	Bits h = trypref(ep, a, lev, flag);
 
 	if (Set(h, MONO) && isvowel(*ep) && isvowel(ep[-2]))
@@ -702,7 +696,7 @@ s(char* ep, char* d, char* a, int lev, int flag)
 Bits
 an(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref d
+	(void)d;
 	if (! isupper(*word))	/* must be proper name */
 		return 0;
 	return trypref(ep, a, lev, flag);
@@ -711,7 +705,7 @@ an(char* ep, char* d, char* a, int lev, int flag)
 Bits
 ize(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref a
+	(void)a;
 	int temp = ep[-1];
 	Bits h;
 
@@ -724,7 +718,7 @@ ize(char* ep, char* d, char* a, int lev, int flag)
 Bits
 y_to_e(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref a
+	(void)a;
 	Bits h;
 	int  temp;
 
@@ -810,7 +804,7 @@ es(char* ep, char* d, char* a, int lev, int flag)
 Bits
 subst(char* ep, char* d, char* a, int lev, int flag)
 {
-#pragma ref a
+	(void)a;
 	char *u, *t;
 	Bits h;
 
@@ -876,7 +870,7 @@ CCe(char* ep, char* d, char* a, int lev, int flag)
 		if (isvowel(ep[-2]))
 			break;
 	case 'u':
-		if (h = y_to_e(ep, d, a, lev, flag))
+		if ((h = y_to_e(ep, d, a, lev, flag)) != 0)
 			return h;
 		if (! (ep[-2] == 'n' && ep[-1] == 'g'))
 			return 0;
@@ -952,7 +946,7 @@ trypref(char* ep, char* a, int lev, int flag)
 		deriv[lev].mesg = a;
 		deriv[lev].type = (*a =='.' ? NONE : SUFF);
 	}
-	if (h = tryword(word, ep, lev, flag)) {
+	if ((h = tryword(word, ep, lev, flag)) != 0) {
 		if (Set(h, flag & ~MONO) && (flag & MONO) <= Set(h, MONO))
 			return h;
 		h = 0;
@@ -963,7 +957,7 @@ trypref(char* ep, char* a, int lev, int flag)
 		deriv[lev + 1].mesg = pp;
 		deriv[lev + 1].type = 0;
 	}
-	while (tp = lookuppref(&bp, ep)) {
+	while ((tp = lookuppref(&bp, ep)) != NULL) {
 		*pp++ = '+';
 		cp = tp->s;
 		while (pp < space + sizeof(space) && (*pp = *cp++) != '\0')

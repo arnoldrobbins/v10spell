@@ -7,7 +7,7 @@ MANDIR = $(PREFIX)/share/man/man1
 
 HFILES = code.h
 
-CFLAGS = -O -DLIBDIR='"$(LIBDIR)/"'
+CFLAGS = -Wall -O -DLIBDIR='"$(LIBDIR)/"'
 
 all:	sprog brspell amspell
 

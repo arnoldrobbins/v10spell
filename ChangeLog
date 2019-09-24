@@ -1,3 +1,10 @@
+2019-09-24         Dan Cross             <cross@gajendra.net>
+
+	* README.md: Formatting cleanups, change `<tt>` tags to
+	markdown backticks.
+	* sprog.c: Fix all warnings; change to use `getopt(3)`.
+	* pcode.c: Fix all warnings.
+
 2019-09-24         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* makefile: Changes for configurability.
