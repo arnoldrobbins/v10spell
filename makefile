@@ -1,6 +1,8 @@
 # Configuration here:
-LIBDIR = /usr/local/lib/v10spell
-BINDIR = /usr/local/bin
+PREFIX = /usr/local
+LIBDIR = $(PREFIX)/lib/v10spell
+BINDIR = $(PREFIX)/bin
+MANDIR = $(PREFIX)/share/man/man1
 # End of configuration
 
 HFILES = code.h
@@ -12,6 +14,10 @@ all:	sprog brspell amspell
 bin:	spell.sh
 	-mkdir -p $(BINDIR)
 	cp spell.sh $(BINDIR)/v10spell
+
+man:	spell.1
+	-mkdir -p $(MANDIR)
+	cp spell.1 $(MANDIR)/v10spell.1
 
 spell.sh: spellsh.in
 	sed -e 's;LIBDIR;$(LIBDIR);g' -e 's;BINDIR;$(BINDIR);g' < spellsh.in > spell.sh
@@ -40,7 +46,7 @@ sprog:	sprog.o
 %.o:	%.c $(HFILES)
 	$(CC) $(CFLAGS) -c $*.c
 
-install: bin lib
+install: bin lib man
 
 clean:
 	rm -f *.[v2o] amspell brspell pcode sprog spell.sh
