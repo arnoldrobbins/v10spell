@@ -4,6 +4,7 @@
 	* spellsh.in: Changes for configurability. Also revise the
 	code for lack of deroff and to handle a user spelling list.
 	* spell.1: Bring in line with Linux -man macros and current code.
+	* README.md: New file.
 
 2019-09-22         Arnold D. Robbins     <arnold@skeeve.com>
 
