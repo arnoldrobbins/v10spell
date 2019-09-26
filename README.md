@@ -28,9 +28,12 @@ McIlroy, is apparently a descendant of the original one, but able
 to take advantage of the larger address space available on VAXen
 as compared to PDP-11s.
 
-Doug McIlroy published a paper on the original UNIX `spell` in IEEE
-Transactions on Communications. It's available from his
-[home page](https://www.cs.dartmouth.edu/~doug/spell.pdf).
+Doug McIlroy published a paper on the original UNIX `spell`:
+
+> _Development of a Spelling List_, M.D. McIlroy,
+> IEEE Transactions on Communications, volume 30, pp 91-99, 1982.
+
+It's available from his [home page](https://www.cs.dartmouth.edu/~doug/spell.pdf).
 
 In private mail to me, Doug says:
 
@@ -82,4 +85,4 @@ you have anything to say about this, please let me know.)
 
 #### Last Updated
 
-Tue Sep 24 19:59:22 IDT 2019
+Thu Sep 26 09:45:47 IDT 2019
