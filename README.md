@@ -78,11 +78,6 @@ in the tenth edition sources tarball.  I'm not sure why.  Nonetheless,
 they work ok.  (Or at least, the `amspell` one does.  I have not
 tested British spelling.)
 
-Also, it seems that "prioritize" appears in both the standard list
-and in the list of American words.  It likely should be removed from
-the standard list, but I haven't done that yet.  (Doug McIlroy - if
-you have anything to say about this, please let me know.)
-
 #### Last Updated
 
-Thu Sep 26 09:45:47 IDT 2019
+Wed Oct 16 11:35:26 EDT 2019

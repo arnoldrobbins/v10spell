@@ -1,3 +1,10 @@
+2019-10-16         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* american: Remove 'prioritize'
+	* list: Move 'repressable' from here ...
+	* stop: ... to here.
+	* README.md: Updated.
+
 2019-09-26         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* README.md: Add reference info for Doug's paper. Thanks
