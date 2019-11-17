@@ -101,6 +101,7 @@ readinput(FILE* f)
 				code++;
 		}
 		words[nwords].encode = typecode(code);
+//		fprintf(stderr, "%s: %s\n", words[nwords].word, code2str(encodes[words[nwords].encode]));
 		nwords++;
 		if (nwords >= sizeof(words)/sizeof(words[0])) {
 			fprintf(stderr, "words array too small\n");
@@ -282,6 +283,38 @@ lput(long l)
 	putchar(l & 0xff);
 }
 
+int
+sget(FILE *fp)
+{
+	int ret = 0;
+
+	int c1 = getc(fp);
+	int c2 = getc(fp);
+
+	ret  = (c1 & 0xFF) << 8;
+	ret |= (c2 & 0xFF);
+
+	return ret;
+}
+
+long
+lget(FILE *fp)
+{
+	long ret = 0;
+
+	int c1 = getc(fp);
+	int c2 = getc(fp);
+	int c3 = getc(fp);
+	int c4 = getc(fp);
+
+	ret  = (c1 & 0xFF) << 24;
+	ret |= (c2 & 0xFF) << 16;
+	ret |= (c3 & 0xFF) <<  8;
+	ret |= (c4 & 0xFF);
+
+	return ret;
+}
+
 /*
  * spit out the encoded dictionary
  * all numbers are encoded big-endian.
@@ -307,10 +340,23 @@ pdict(void)
 	Bits encode;
 	int j, c;
 	char *lastword, *thisword, *word;
+	FILE *fp = fopen("amspell.v10", "r");
+
+	int v10ncodes = sget(fp);
+	long v10code;
 
 	sput(ncodes);
-	for (i = 0; i < ncodes; i++)
+	if (ncodes != v10ncodes)
+		fprintf(stderr, "ncodes %d != v10ncodes (%d)\n", ncodes, v10ncodes);
+
+	for (i = 0; i < ncodes; i++) {
 		lput(encodes[i]);
+		v10code = lget(fp);
+		if (encodes[i] != v10code) {
+			fprintf(stderr, "encodes[%ld] %s != v10code ", i, code2str(encodes[i]));
+			fprintf(stderr, "(%s)\n", code2str(v10code));
+		}
+	}
 
 	count = ncodes * 4 + 2;
 	lastword = "";
@@ -331,8 +377,15 @@ pdict(void)
 		c = (1 << 15) | (j << 11) | encode;
 		sput(c);
 		count += 2;
+		int c2 = sget(fp);
+		if (c != c2) {
+			fprintf(stderr, "word[%ld] (%s) code %#x/%s != v10code ",
+					i, words[i].word, c, code2str(c));
+			fprintf(stderr, "%#x/%s\n", c2, code2str(c2));
+		}
 		for (thisword = word + j; (c = *thisword) != '\0'; thisword++) {
 			putchar(c);
+			(void) getc(fp);
 			count++;
 		}
 		lastword = word;

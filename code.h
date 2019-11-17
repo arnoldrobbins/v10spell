@@ -1,3 +1,4 @@
+#include <string.h>
 
 /*
  * affix codes
@@ -26,3 +27,47 @@
 #define _Y		(1<<17)	/* +y */
 
 #define ALL		(~(NOPREF|STOP|DONT_TOUCH|MONO|IN))    /*anything goes (no stop or nopref)*/
+
+static char *
+code2str(int code)
+{
+	static struct codes {
+		const char *str;
+		int val;
+	} codes[] = {
+		{ "ED", ED },
+		{ "ADJ", ADJ },
+		{ "NOUN", NOUN },
+		{ "PROP_COLLECT", PROP_COLLECT },
+		{ "ACTOR", ACTOR },
+		{ "EST", EST },
+		{ "DONT_TOUCH", DONT_TOUCH },
+		{ "ION", ION },
+		{ "N_AFFIX", N_AFFIX },
+		{ "V_AFFIX", V_AFFIX },
+		{ "V_IRREG", V_IRREG },
+		{ "MAN", MAN },
+		{ "ADV", ADV },
+		{ "STOP", STOP },
+		{ "NOPREF", NOPREF },
+		{ "MONO", MONO },
+		{ "IN", IN },
+		{ "_Y", _Y },
+		{ NULL, 0 }
+	};
+	static char buffer[200];
+	char *cp = buffer;
+
+	memset(buffer, '\0', sizeof(buffer));
+	for (int i = 0; codes[i].str != NULL; i++) {
+		if ((code & codes[i].val) != 0) {
+			if (cp != buffer)
+				*cp++ = '|';
+			strcpy(cp, codes[i].str);
+			cp += strlen(cp);
+		}
+	}
+	*cp = '\0';
+
+	return buffer;
+}
