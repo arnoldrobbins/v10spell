@@ -73,11 +73,14 @@ that tag if you want to see it.
 
 ## Oddities
 
-The `amspell` and `brspell` files differ slightly from those found
-in the tenth edition sources tarball.  I'm not sure why.  Nonetheless,
-they work ok.  (Or at least, the `amspell` one does.  I have not
-tested British spelling.)
+The `amspell` and `brspell` files differ slightly from those found in
+the tenth edition sources tarball.  Nonetheless, they work ok.  (Or at
+least, the `amspell` one does.  I have not tested British spelling.)
+
+I did some debugging.  (Debugging code can be found in the `debugging`
+branch.) It looks like the word lists used to create the tenth edition
+files differed from what's in the tarball.
 
 #### Last Updated
 
-Wed Oct 16 11:35:26 EDT 2019
+Sun Nov 17 21:28:38 IST 2019
