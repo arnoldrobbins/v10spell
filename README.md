@@ -34,6 +34,7 @@ Doug McIlroy published a paper on the original UNIX `spell`:
 > IEEE Transactions on Communications, volume 30, pp 91-99, 1982.
 
 It's available from his [home page](https://www.cs.dartmouth.edu/~doug/spell.pdf).
+For completeness, I have included a copy in the repository.
 
 In private mail to me, Doug says:
 
@@ -71,6 +72,10 @@ be in touch.
 The original code is tagged with `v10-code-from-TUHS`; check out
 that tag if you want to see it.
 
+The file `spell-wrapper.sh` was contributed by Nelson H.F. Beebe.
+It wraps some additional functionally around the original program.
+Read the script for the details.
+
 ## Oddities
 
 The `amspell` and `brspell` files differ slightly from those found in
@@ -83,4 +88,4 @@ files differed from what's in the tarball.
 
 #### Last Updated
 
-Sun Nov 17 21:28:38 IST 2019
+Fri Dec  6 07:51:14 IST 2019

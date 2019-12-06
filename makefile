@@ -1,13 +1,15 @@
 # Configuration here:
-PREFIX = /usr/local
+prefix = /usr/local
+PREFIX = $(prefix)
 LIBDIR = $(PREFIX)/lib/v10spell
 BINDIR = $(PREFIX)/bin
 MANDIR = $(PREFIX)/share/man/man1
+XCFLAGS =
 # End of configuration
 
 HFILES = code.h
 
-CFLAGS = -Wall -O -DLIBDIR='"$(LIBDIR)/"'
+CFLAGS = -Wall -O -DLIBDIR='"$(LIBDIR)/"' $(XCFLAGS)
 
 all:	sprog brspell amspell
 

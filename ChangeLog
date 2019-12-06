@@ -6,6 +6,10 @@
 	This broke spell on 64-bit machines.
 	* spell.1: Add a section explaining that spell doesn't always
 	ignore case when determining if a word is misspelled or not.
+	* spell.pdf: New file.
+	* spell-wrapper.sh: New file.
+	* makefile (prefix, XCFLAGS): Suggested changes from Nelson Beebe.
+	* README.md: Updated.
 
 2019-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
