@@ -101,6 +101,32 @@ Private spelling list
 .B /usr/local/lib/v10spell/sprog
 The main routine
 .RB ( $P_SPELL ).
+.SH CASE SENSITIVITY
+Unlike some other spelling checkers,
+.I v10spell
+does not totally ignore case when checking words,
+and thus can be surprising.
+Doug McIlroy explains:
+.PP
+.RS
+You can derive words by adding affixes to words in the dictionary,
+but not by deleting them. You can derive capitalized (initially or
+wholly) from lowercase words; but you can't derive a lowercase
+word from a capitalized word in the dictionary.
+Thus from
+.I Americanize
+you cannot derive any of
+.IR American ,
+.IR America ,
+.IR americanize ,
+.IR american ,
+[or]
+.IR america .
+.RE
+.PP
+In practice, because there are other words in the dictionary besides
+.IR Americanize ,
+most of the above words are recognized.
 .SH BUGS
 Words in a private list are recognized only by
 exact match, including capitalization and affixing.

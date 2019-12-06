@@ -1,3 +1,12 @@
+2019-12-06         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* code.h (code2str): New function.
+	* pcode.c, sprog.c: Replace long with int32_t in strategic
+	places to match the code's assumption that long is four bytes.
+	This broke spell on 64-bit machines.
+	* spell.1: Add a section explaining that spell doesn't always
+	ignore case when determining if a word is misspelled or not.
+
 2019-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* README.md: Updated.

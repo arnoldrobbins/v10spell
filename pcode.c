@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
 #include <locale.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "code.h"
 
@@ -12,7 +13,7 @@
 	octal <tab> word
  */
 
-typedef long Bits;
+typedef int32_t Bits;
 typedef	struct	Dict	Dict;
 struct	Dict
 {
@@ -28,7 +29,7 @@ long	nwords;
 int	ncodes;
 
 void	readinput(FILE*);
-long	typecode(char*);
+int32_t	typecode(char*);
 int	wcmp(const void*, const void*);
 void	pdict(void);
 void	sput(int);
@@ -117,7 +118,7 @@ readinput(FILE* f)
 typedef struct	Class
 {
 	char*	codename;
-	long	bits;
+	int32_t	bits;
 } Class;
 Class	codea[]  =
 {
@@ -224,7 +225,7 @@ Class*	codetab[] =
 	codez,
 };
 
-long
+int32_t
 typecode(char *str)
 {
 	Class *p;
@@ -274,7 +275,7 @@ sput(int s)
 }
 
 void
-lput(long l)
+lput(int32_t l)
 {
 	putchar((l>>24) & 0xff);
 	putchar((l>>16) & 0xff);

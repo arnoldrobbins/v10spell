@@ -1,21 +1,22 @@
 #include "code.h"
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <locale.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <locale.h>
 
 #define pair(a, b)	(((a) << 8) | (b))
 #define DLEV		2
 #define DSIZ		40
 
-typedef	long	Bits;
+typedef	int32_t	Bits;
 typedef unsigned char uchar;
-#define	Set(h, f)	((long)(h) & (f))
+#define	Set(h, f)	((int32_t)(h) & (f))
 
 Bits 	nop(char*, char*, char*, int, int);
 Bits 	strip(char*, char*, char*, int, int);
@@ -531,7 +532,7 @@ main(int argc, char *argv[])
 			goto check;
 
 		h = 0;
-		if (! low && ! (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)))
+		if (! low && (h = trypref(ep, ".", 0, ALL|STOP|DONT_TOUCH)) == 0)
 			for (cp = original+1, dp = word+1; dp < ep; dp++, cp++)
 				*dp = tolower(*cp);
 		if (! h) {
@@ -1235,10 +1236,10 @@ ordinal(void)
 		sp[1] = tolower(cp[1]);
 	}
 	return 0 == strncmp(sp,
-		cp[-2] =='1'? "th":	/* out of bounds if 1 digit */
-		*--cp =='1'? "st":	/* harmless */
-		*cp =='2'? "nd":
-		*cp =='3'? "rd":
+		cp[-2] =='1' ? "th" :	/* out of bounds if 1 digit */
+		*--cp =='1' ? "st" :	/* harmless */
+		*cp =='2' ? "nd" :
+		*cp =='3' ? "rd" :
 		"th", 3);
 }
 
@@ -1261,7 +1262,7 @@ readdict(char *file)
 	char *s, *is, *lasts, *ls;
 	int c, i, sp, p;
 	int f;
-	long l;
+	int32_t l;
 
 	f = open(file, 0);
 	if (f == -1) {
@@ -1277,8 +1278,8 @@ readdict(char *file)
 			!= nencode * sizeof(*encode))
 		goto bad;
 	s = space;
-	for (i = 0; i<nencode; i++) {
-		l = (long) (s[0] & 0xff) << 24;
+	for (i = 0; i < nencode; i++) {
+		l = (int32_t) (s[0] & 0xff) << 24;
 		l |= (s[1] & 0xff) << 16;
 		l |= (s[2] & 0xff) << 8;
 		l |= s[3] & 0xff;
@@ -1303,7 +1304,7 @@ loop:
 		close(f);
 		while (sp < 128 * 128)
 			spacep[++sp] = s;
-		*s++ = 0x80;		/* fence */
+		*s++ = (char) 0x80;		/* fence */
 		return;
 	}
 	p = (c >> 3) & 0xf;
@@ -1327,7 +1328,7 @@ loop:
 	for (p -= 2; p > 0; p--)
 		*s++ = *ls++;
 	for (;;) {
-		if (is >= space+sizeof(space)) {
+		if (is >= space + sizeof(space)) {
 			c = -1;
 			break;
 		}
