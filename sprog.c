@@ -14,9 +14,9 @@
 #define DLEV		2
 #define DSIZ		40
 
-typedef	int32_t	Bits;
-typedef unsigned char uchar;
-#define	Set(h, f)	((int32_t)(h) & (f))
+typedef	uint32_t	Bits;
+typedef unsigned char	uchar;
+#define	Set(h, f)	((Bits)(h) & (f))
 
 Bits 	nop(char*, char*, char*, int, int);
 Bits 	strip(char*, char*, char*, int, int);

@@ -1,3 +1,7 @@
+2019-07-11         Dan Cross             <cross@gajendra.net>
+
+	* Avoid UB by using unsigned types for hashes
+
 2019-12-06         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* code.h (code2str): New function.

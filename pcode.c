@@ -13,8 +13,8 @@
 	octal <tab> word
  */
 
-typedef int32_t Bits;
-typedef	struct	Dict	Dict;
+typedef uint32_t Bits;
+typedef	struct Dict Dict;
 struct	Dict
 {
 	char*	word;
